@@ -1,0 +1,4 @@
+groupe_list>"C:\Users\shish\Documents\code\Ñ++\comparison_engine\comparison_engine\comparison_engine\groupList.txt"
+general_list>"C:\Users\shish\Documents\code\Ñ++\comparison_engine\comparison_engine\comparison_engine\generalList.txt"
+output_list>
+max_difference>4
