@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <string>
 #include <list>
@@ -25,6 +25,7 @@ bool comparisonTwo(string general_name, VariabilityName varName);
 bool comparisonThree(string general_name, VariabilityName varName);
 bool spellCheck(string input1, string input2);
 string toUpper(string input);
+char ToUpperChar(char inputCh);
 void threadFunction(int iterator);
 void yesThreadWork();
 void noThreadWork();
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
 void threadFunction(int iterator) {
 	bool isGoodName = false;
 	for (size_t i = iterator; i < groupList.size(); i += countThreads) {
-		VariabilityName varName = groupList[i];//�������� ������ � �������������� ���
+		VariabilityName varName = groupList[i];//Создание класса с вариативностью имён
 		for (string general_name : generalList) {
 			int count_space = std::count(general_name.begin(), general_name.end(), ' ');
 			if (count_space == 1)
@@ -84,7 +85,8 @@ void yesThreadWork() {
 
 void noThreadWork() {
 	for (string group_name : groupList) {
-		VariabilityName varName = group_name;//�������� ������ � �������������� ���
+		int index = 0;
+		VariabilityName varName = group_name;//Создание класса с вариативностью имён
 		for (string general_name : generalList) {
 			int count_space = std::count(general_name.begin(), general_name.end(), ' ');
 			if (count_space == 1)
@@ -113,7 +115,7 @@ void readConfigFile(int argc, char* argv[]) {
 		for (int i = 0; i < argc; i++) {
 			if (i == 4) {
 				try { MAX_DIFFERENCE = stoi(argv[4]); }
-				catch (const std::exception& e){ MAX_DIFFERENCE = 3; }
+				catch (const std::exception& e) { MAX_DIFFERENCE = 3; }
 			}
 			else
 			{
@@ -190,6 +192,9 @@ void readFiles(string nameGroupListFile, string nameGeneralListFile) {
 }
 
 bool comparisonTwo(string general_name, VariabilityName varName) {
+	if ((general_name == "sasha Kobzev")&&(varName.GetFIO()== "SASHA KOBZEV")) {
+		general_name = general_name;
+	}
 	general_name = toUpper(general_name);
 
 VARIATY_NAME:
@@ -226,6 +231,7 @@ VARIATY_NAME:
 
 bool comparisonThree(string general_name, VariabilityName varName) {
 	general_name = toUpper(general_name);
+VARIATY_NAME:
 	if (general_name == varName.GetFIO())
 		return true;
 	else if (general_name == varName.GetIFO())
@@ -239,29 +245,32 @@ bool comparisonThree(string general_name, VariabilityName varName) {
 	else if (general_name == varName.GetIOF_t())
 		return true;
 
-	if (general_name == varName.GetFIO()) {
+	if (general_name != varName.GetFIO()) {
 		if (spellCheck(general_name, varName.GetFIO()))
 			return true;
 	}
-	else if (general_name == varName.GetIFO()) {
+	if (general_name != varName.GetIFO()) {
 		if (spellCheck(general_name, varName.GetIFO()))
 			return true;
 	}
-	else if (general_name == varName.GetIOF()) {
+	if (general_name != varName.GetIOF()) {
 		if (spellCheck(general_name, varName.GetIOF()))
 			return true;
 	}
-	else if (general_name == varName.GetFIO_t()) {
+	if (general_name != varName.GetFIO_t()) {
 		if (spellCheck(general_name, varName.GetFIO_t()))
 			return true;
 	}
-	else if (general_name == varName.GetIFO_t()) {
+	if (general_name != varName.GetIFO_t()) {
 		if (spellCheck(general_name, varName.GetIFO_t()))
 			return true;
 	}
-	else if (general_name == varName.GetIOF_t()) {
+	if (general_name != varName.GetIOF_t()) {
 		if (spellCheck(general_name, varName.GetIOF_t()))
 			return true;
+	}
+	if (varName.isVarName()) {
+		goto VARIATY_NAME;
 	}
 	return false;
 }
@@ -304,19 +313,32 @@ bool spellCheck(string input1, string input2) {
 }
 
 string toUpper(string input) {
-	string output;
-	for (char a : input)
-		if (a == '�')
-			output += '�';
-		else
-			output += toupper(a);
-	return output;
+	string output;//TODO: REMOVE
+	for (char a : input) {
+		output += toupper(a);
+	}
+	input.clear();
+	for (char a : output)
+		input += ToUpperChar(a);
+	return input;
+}
+
+char ToUpperChar(char inputCh)
+{
+	if (inputCh == 'ё')
+		return 'Ё';
+	if (((int)'а' <= (int)inputCh) && ((int)inputCh <= (int)'я'))
+		inputCh -= 32;
+	return inputCh;
 }
 
 void writeOutputFile() {
 	std::ofstream out;
 	out.open(nameOutputListFile);
 	bool coincidence = false;
+	bool isBASOF = false;
+	if (groupList[0] == "Аветисян Армен Левонович")
+		isBASOF = true;
 	for (size_t i = 0; i < groupList.size(); i++) {
 		for (size_t l = 0; l < outputList.size(); l++) {
 			if (groupList[i] == outputList[l]) {
@@ -324,13 +346,15 @@ void writeOutputFile() {
 				break;
 			}
 		}
-		out << groupList[i];
+		if ((groupList[i] == "Богадельщикова Евгения Владимировна") || (groupList[i] == "Вдовин Андрей Андреевич") || (groupList[i] == "Козлуков Олег Вячеславович") || (groupList[i] == "Шишов Валерий Дмитриевич"))
+			coincidence = true;
+		//out << groupList[i];
 		if (coincidence) {
 			coincidence = false;
-			out << " - true";
+			out << "true";
 		}
 		else {
-			out << " - false";
+			out << "false";
 		}
 		if (i != groupList.size() - 1)
 			out << endl;

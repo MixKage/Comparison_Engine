@@ -1,6 +1,7 @@
 #include "VariabilityName.h"
+#include <iostream>
 
-VariabilityName::VariabilityName(std::string input){
+VariabilityName::VariabilityName(std::string input) {
 	VariabilityNameEng(input);
 }
 
@@ -10,10 +11,8 @@ void VariabilityName::VariabilityNameEng(std::string input) {
 	std::string lastName;
 	int space = 0;
 	for (char a : input) {
-		if (a == 'ÿ')
-			a = 'ß';
-		else
-			a = toupper(a);
+		a = toupper(a);
+		a = ToUpper(a);
 		if (a == ' ') {
 			space++;
 			continue;
@@ -93,6 +92,15 @@ std::string VariabilityName::TranslitLetter(char input) {
 	case 'ß': return "JA";
 	default: return std::to_string(input);
 	};
+}
+
+char VariabilityName::ToUpper(char inputCh)
+{
+	if (inputCh == '¸')
+		return '¨';
+	if (((int)'à' <= (int)inputCh) && ((int)inputCh <= (int)'ÿ'))
+		inputCh -= 32;
+	return inputCh;
 }
 
 std::string VariabilityName::GetFIO()

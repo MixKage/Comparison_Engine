@@ -1,4 +1,4 @@
 groupe_list>"C:\Users\shish\Documents\code\Ñ++\comparison_engine\comparison_engine\comparison_engine\groupList.txt"
-general_list>"C:\Users\shish\Documents\code\Ñ++\comparison_engine\comparison_engine\comparison_engine\generalList.txt"
+general_list>"C:\Users\shish\Documents\code\Ñ++\comparison_engine\comparison_engine\comparison_engine\generalList4.txt"
 output_list>
-max_difference>4
+max_difference>

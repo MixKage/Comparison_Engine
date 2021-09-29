@@ -16,6 +16,7 @@ private:
 	std::string _IF_t;
 	std::string Translit(std::string input);
 	std::string TranslitLetter(char input);
+	char ToUpper(char inputCh);
 	std::string CheckVarName(std::string input);
 	std::map <std::string, std::string> varNames = { {"ÀËÅÊÑÀÍÄĞ", "ÑÀØÀ"},{"ÀËÅÊÑÅÉ", "ËÅØÀ"},
 		{"ÑÅĞÃÅÉ", "ÑÅĞÅÆÀ"},{"ÀÍÄĞÅÉ", "ÀÍÄĞŞØÀ"},{"ÄÌÈÒĞÈÉ", "ÄÈÌÀ"},{"ÌÈÕÀÈË", "ÌÈØÀ"},
