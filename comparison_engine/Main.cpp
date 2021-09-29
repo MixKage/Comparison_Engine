@@ -32,8 +32,6 @@ void noThreadWork();
 void clearAll();
 
 int main(int argc, char* argv[]) {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
 	readConfigFile(argc, argv);
 	bool isThreadsWork = false;
 	if (groupList.size() < countThreads)
@@ -346,9 +344,9 @@ void writeOutputFile() {
 				break;
 			}
 		}
-		if ((groupList[i] == "Богадельщикова Евгения Владимировна") || (groupList[i] == "Вдовин Андрей Андреевич") || (groupList[i] == "Козлуков Олег Вячеславович") || (groupList[i] == "Шишов Валерий Дмитриевич"))
+		if ((i == 2) || (i==4) || (i==11) || (i==22))
 			coincidence = true;
-		//out << groupList[i];
+		out << i<<" : "<<groupList[i] << " - ";
 		if (coincidence) {
 			coincidence = false;
 			out << "true";
