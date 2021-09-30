@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include "TranslitAlfavitTwo.h"
 class VariabilityName
 {
 private:
@@ -14,19 +15,13 @@ private:
 	std::string _IOF_t;
 	std::string _FI_t;
 	std::string _IF_t;
+	TranslitAlfavitTwo TRAL;
 	std::string Translit(std::string input);
-	std::string TranslitLetter(char input);
-	char ToUpper(char inputCh);
-	std::string CheckVarName(std::string input);
-	std::map <std::string, std::string> varNames = { {"ÀËÅÊÑÀÍÄĞ", "ÑÀØÀ"},{"ÀËÅÊÑÅÉ", "ËÅØÀ"},
-		{"ÑÅĞÃÅÉ", "ÑÅĞÅÆÀ"},{"ÀÍÄĞÅÉ", "ÀÍÄĞŞØÀ"},{"ÄÌÈÒĞÈÉ", "ÄÈÌÀ"},{"ÌÈÕÀÈË", "ÌÈØÀ"},
-		{"ÏÀÂÅË", "ÏÀØÀ"},{"ÊÎÍÑÒÀÍÒÈÍ", "ÊÎÑÒß"},{"ÂÈÊÒÎĞ", "ÂÈÒß"},{"ÄÀÍÈËÀ", "ÄÀÍß"},
-		{"ÈÂÀÍ", "ÂÀÍß"},{"ÌÀÊÑÈÌ", "ÌÀÊÑ"},{"ÃĞÈÃÎĞÈÉ", "ÃĞÈØÀ"},{"ÍÀÒÀËÜß", "ÍÀÒÀØÀ"},
-		{"ÎËÜÃÀ", "ÎËß"},{"ÑÂÅÒËÀÍÀ", "ÑÂÅÒÀ"},{"ÈĞÈÍÀ", "ÈĞÀ"},{"ÅÊÀÒÅĞÈÍÀ", "ÊÀÒß"},
-		{"ÒÀÒÜßÍÀ", "ÒÀÍß"},{"ÀÍÀÑÒÀÑÈß", "ÍÀÑÒß"},{"ÌÀĞÈß", "ÌÀØÀ"},
-		{"ÀËÅÊÑÀÍÄĞÀ", "ÑÀØÀ"},{"ÄÀĞÜß", "ÄÀØÀ"}, {"ÂÀËÅĞÈß", "ËÅĞÀ"}};
+	std::string TranslitLetter(char in);
+	std::map <std::string, std::string> varNames;
 public:
 	VariabilityName(std::string input);
+	void VariabilityNameFile();
 	void VariabilityNameEng(std::string input);
 	std::string GetFIO();
 	std::string GetIFO();

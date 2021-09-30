@@ -1,45 +1,101 @@
 #include "VariabilityName.h"
+#include "TranslitAlfavitTwo.h"
+#include "ToUpper.h"
 #include <iostream>
-
+#include <fstream>
+ToUpper toUpper;
 VariabilityName::VariabilityName(std::string input) {
+	VariabilityNameFile();
 	VariabilityNameEng(input);
+	
+}
+
+void VariabilityName::VariabilityNameFile() {
+	std::ifstream in("variabilityName.txt");
+	std::string s;
+	std::string name;
+	std::string varName;
+	if (in.is_open())
+	{
+		while (!in.eof())
+		{
+			name.clear();
+			varName.clear();
+			std::getline(in, s);
+			for (size_t i = 0; i < s.size(); i++)
+				if (s[i] != '>')
+					name += s[i];
+				else {
+					s.erase(0, i + 1);
+					break;
+				}
+			varName = s;
+
+			varNames.insert(std::pair<std::string, std::string>(name, varName));
+		}
+	}
+	else {
+		std::cout << "VariabilityName can't open! VariabilityNames not work!" << std::endl;
+	}
+	in.close();
 }
 
 void VariabilityName::VariabilityNameEng(std::string input) {
-	std::string firstName;
-	std::string name;
-	std::string lastName;
-	int space = 0;
+	std::string fnl[3];
+	size_t indexFnl = 0;
+	size_t index = 0;
+	std::string tmp;
+	int isFirstChar = 0;
+	bool isSpace = false;
 	for (char a : input) {
-		a = toupper(a);
-		a = ToUpper(a);
-		if (a == ' ') {
-			space++;
+		if (index == 0) {
+			isFirstChar = 2;
+			tmp += a;
+			index++;
 			continue;
 		}
-		switch (space)
-		{
-		case (0):
-			firstName += a;
-			break;
-		case (1):
-			name += a;
-			break;
-		case (2):
-			lastName += a;
-			break;
+		else if (a == ' ') {
+			fnl[indexFnl++] = tmp;
+			isFirstChar = 1;
+			tmp.clear();
+			isSpace = !isSpace;
+			index++;
+			continue;
+		}
+		else if (isFirstChar == 1) {
+			tmp += a;
+			isFirstChar = 2;
+			index++;
+			continue;
+		}
+		else if (isFirstChar == 2) {
+			tmp += a;
+			isFirstChar = 0;
+			index++;
+			continue;
+		}
+		try {
+			if (((index % 2 == 1) && (!isSpace)) || (index % 2 == 0) && (isSpace))
+				tmp += toUpper.toUpperAlfavit[a];
+		}
+		catch (const std::exception& e) {
+			tmp += a;
+		}
+		index++;
+		if (index >= input.size()) {
+			fnl[indexFnl] = tmp;
 		}
 	}
 
-	std::string firstName_t = Translit(firstName);
-	std::string name_t = Translit(name);
-	std::string lastName_t = Translit(lastName);
+	std::string firstName_t = Translit(fnl[0]);
+	std::string name_t = Translit(fnl[1]);
+	std::string lastName_t = Translit(fnl[2]);
 
-	_FIO = firstName + " " + name + " " + lastName;
-	_IFO = name + " " + firstName + " " + lastName;
-	_IOF = name + " " + lastName + " " + firstName;
-	_FI = firstName + " " + name;
-	_IF = name + " " + firstName;
+	_FIO = fnl[0] + " " + fnl[1] + " " + fnl[2];
+	_IFO = fnl[1] + " " + fnl[0] + " " + fnl[2];
+	_IOF = fnl[1] + " " + fnl[2] + " " + fnl[0];
+	_FI = fnl[0] + " " + fnl[1];
+	_IF = fnl[1] + " " + fnl[0];
 
 	_FIO_t = firstName_t + " " + name_t + " " + lastName_t;
 	_IFO_t = name_t + " " + firstName_t + " " + lastName_t;
@@ -50,57 +106,19 @@ void VariabilityName::VariabilityNameEng(std::string input) {
 
 std::string VariabilityName::Translit(std::string input) {
 	std::string output;
-	for (char a : input)
-		output += TranslitLetter(a);
+	for (int i = 0; i < input.size(); ++i)
+	{
+		char out= input[++i];
+		output += TranslitLetter(out);
+	}
 	return output;
 }
 
-std::string VariabilityName::TranslitLetter(char input) {
-	switch (input) {
-	case 'À': return "A";
-	case 'Á': return "B";
-	case 'Â': return "V";
-	case 'Ã': return "G";
-	case 'Ä': return "D";
-	case 'Å': return "E";
-	case '¨': return "JE";
-	case 'Æ': return "ZH";
-	case 'Ç': return "Z";
-	case 'È': return "I";
-	case 'É': return "Y";
-	case 'Ê': return "K";
-	case 'Ë': return "L";
-	case 'Ì': return "M";
-	case 'Í': return "N";
-	case 'Î': return "O";
-	case 'Ï': return "P";
-	case 'Ð': return "R";
-	case 'Ñ': return "S";
-	case 'Ò': return "T";
-	case 'Ó': return "U";
-	case 'Ô': return "F";
-	case 'Õ': return "KH";
-	case 'Ö': return "C";
-	case '×': return "CH";
-	case 'Ø': return "SH";
-	case 'Ù': return "JSH";
-	case 'Ú': return "HH";
-	case 'Û': return "IH";
-	case 'Ü': return "JH";
-	case 'Ý': return "EH";
-	case 'Þ': return "JU";
-	case 'ß': return "JA";
-	default: return std::to_string(input);
-	};
-}
-
-char VariabilityName::ToUpper(char inputCh)
-{
-	if (inputCh == '¸')
-		return '¨';
-	if (((int)'à' <= (int)inputCh) && ((int)inputCh <= (int)'ÿ'))
-		inputCh -= 32;
-	return inputCh;
+std::string VariabilityName::TranslitLetter(char in) {
+	std::string output = TRAL.translitAlfavit[in];
+	if (output.empty())
+		output = in;
+	return output;
 }
 
 std::string VariabilityName::GetFIO()

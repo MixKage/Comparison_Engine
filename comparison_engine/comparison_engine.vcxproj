@@ -143,10 +143,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ToUpper.cpp" />
+    <ClCompile Include="TranslitAlfavitTwo.cpp" />
     <ClCompile Include="VariabilityName.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ToUpper.h" />
+    <ClInclude Include="TranslitAlfavitTwo.h" />
     <ClInclude Include="VariabilityName.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="alfavitTranslit.txt" />
+    <Text Include="toUpper.txt" />
+    <Text Include="variabilityName.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

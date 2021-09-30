@@ -1,25 +1,27 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-#include <list>
 #include <Windows.h>
 #include <thread>
 #include <mutex>
 #include <vector>
 #include "VariabilityName.h"
+#include "ToUpper.h"
 using namespace std;
 
-vector<string> groupList;
-vector<string> generalList;
-vector<string> outputList;
-size_t countThreads = std::thread::hardware_concurrency();
-vector<thread> threads(countThreads);
+vector<string> groupList;//Список группы
+vector<string> generalList;//Общий список
+vector<string> outputList;//Выходной список
+vector<string> addList;//Добавочный список, кто якобы был на паре
+size_t countThreads = std::thread::hardware_concurrency();//Кол-во потоков
+vector<thread> threads(countThreads);//Потоки
 mutex mu;
-size_t MAX_DIFFERENCE = 3;
+size_t MAX_DIFFERENCE = 3;//Количество отклонений
 string nameOutputListFile = "outputList.txt";
+ToUpper toUpperClass;
 
 void readConfigFile(int argc, char* argv[]);
-void readFiles(string nameGroupListFile, string nameGeneralListFile);
+void readFiles(string nameGroupListFile, string nameGeneralListFilem, string nameAddListFiles);
 void writeOutputFile();
 bool comparisonTwo(string general_name, VariabilityName varName);
 bool comparisonThree(string general_name, VariabilityName varName);
@@ -40,7 +42,6 @@ int main(int argc, char* argv[]) {
 		isThreadsWork = true;
 		yesThreadWork();
 	}
-
 	if (isThreadsWork)
 		for (auto& th : threads) th.join();
 
@@ -108,11 +109,11 @@ void noThreadWork() {
 void readConfigFile(int argc, char* argv[]) {
 	ifstream in("configEngine.txt");
 	string s;
-	string nameFile[4];
+	string nameFile[6];
 	if (argc != 1) {
 		for (int i = 0; i < argc; i++) {
-			if (i == 4) {
-				try { MAX_DIFFERENCE = stoi(argv[4]); }
+			if (i == 5) {
+				try { MAX_DIFFERENCE = stoi(argv[5]); }
 				catch (const std::exception& e) { MAX_DIFFERENCE = 3; }
 			}
 			else
@@ -122,6 +123,9 @@ void readConfigFile(int argc, char* argv[]) {
 				nameFile[i] = tmp;
 			}
 		}
+		if (!nameFile[3].empty())
+			nameOutputListFile = nameFile[3];
+		readFiles(nameFile[1], nameFile[2], nameFile[4]);
 	}
 	else if (in.is_open())
 	{
@@ -138,7 +142,7 @@ void readConfigFile(int argc, char* argv[]) {
 
 			while (s.find('"') != -1) s.erase(s.find('"'), 1);
 
-			if (index == 3) {
+			if (index == 4) {
 				try {
 					MAX_DIFFERENCE = stoi(s);
 				}
@@ -151,13 +155,13 @@ void readConfigFile(int argc, char* argv[]) {
 				index++;
 			}
 		}
+		if (!nameFile[2].empty())
+			nameOutputListFile = nameFile[2];
+		readFiles(nameFile[0], nameFile[1], nameFile[3]);
 	}
-	if (!nameFile[2].empty())
-		nameOutputListFile = nameFile[2];
-	readFiles(nameFile[0], nameFile[1]);
 }
 
-void readFiles(string nameGroupListFile, string nameGeneralListFile) {
+void readFiles(string nameGroupListFile, string nameGeneralListFile, string nameAddListFile) {
 	if (nameGroupListFile.empty())
 		nameGroupListFile = "groupList.txt";
 	ifstream in(nameGroupListFile);
@@ -170,8 +174,10 @@ void readFiles(string nameGroupListFile, string nameGeneralListFile) {
 			groupList.push_back(s);
 		}
 	}
-	else
+	else {
+		cout << nameGroupListFile + " can't open!" << endl;
 		throw std::runtime_error(nameGroupListFile + " can't open!");
+	}
 	in.close();
 	if (nameGeneralListFile.empty())
 		nameGeneralListFile = "generalList.txt";
@@ -184,18 +190,45 @@ void readFiles(string nameGroupListFile, string nameGeneralListFile) {
 			generalList.push_back(s);
 		}
 	}
-	else
+	else {
+		cout << nameGroupListFile + " can't open!" << endl;
 		throw std::runtime_error(nameGeneralListFile + " can't open!");
+	}
+	in.close();
+	if (nameAddListFile.empty())
+		nameAddListFile = "addList.txt";
+	in.open(nameAddListFile);
+	if (in.is_open())
+	{
+		while (!in.eof())
+		{
+			getline(in, s);
+			addList.push_back(s);
+		}
+	}
+	else {
+		cout << nameAddListFile + " can't open!" << endl;
+	}
 	in.close();
 }
 
 bool comparisonTwo(string general_name, VariabilityName varName) {
-	if ((general_name == "sasha Kobzev")&&(varName.GetFIO()== "SASHA KOBZEV")) {
+	if (general_name == "sasha Kobzev") {
+		general_name = general_name;
+	}
+	if (varName.GetIF_t() == "ALEKSANDR KOBZEV") {
+		general_name = general_name;
+	}
+	if ((general_name == "sasha Kobzev") && (varName.GetIF_t() == "ALEKSANDR KOBZEV")) {
 		general_name = general_name;
 	}
 	general_name = toUpper(general_name);
 
 VARIATY_NAME:
+	ofstream out;
+	out.open("TEST.txt");
+	out << general_name <<  endl<<varName.GetIF()<<endl<<varName.GetIF()<<endl<<varName.GetFI_t()<<endl<<varName.GetIF_t()<<endl;
+	out.close();
 	if (general_name == varName.GetFI())
 		return true;
 	else if (general_name == varName.GetIF())
@@ -311,32 +344,53 @@ bool spellCheck(string input1, string input2) {
 }
 
 string toUpper(string input) {
-	string output;//TODO: REMOVE
+	/*string output;*/
+	size_t index = 0;
+	string tmp;
+	int isFirstChar = 0;
+	bool isSpace = false;
 	for (char a : input) {
-		output += toupper(a);
+		if (index == 0) {
+			isFirstChar = 2;
+			tmp += a;
+			index++;
+			continue;
+		}
+		else if (a == ' ') {
+			isFirstChar = 1;
+			tmp += " ";
+			isSpace = !isSpace;
+			index++;
+			continue;
+		}
+		else if (isFirstChar == 1) {
+			tmp += a;
+			isFirstChar = 2;
+			index++;
+			continue;
+		}
+		else if (isFirstChar == 2) {
+			tmp += a;
+			isFirstChar = 0;
+			index++;
+			continue;
+		}
+		try {
+			if (((index % 2 == 1) && (!isSpace)) || (index % 2 == 0) && (isSpace))
+				tmp += toUpperClass.toUpperAlfavit[a];
+		}
+		catch (const std::exception& e) {
+			tmp += a;
+		}
+		index++;
 	}
-	input.clear();
-	for (char a : output)
-		input += ToUpperChar(a);
-	return input;
-}
-
-char ToUpperChar(char inputCh)
-{
-	if (inputCh == 'ё')
-		return 'Ё';
-	if (((int)'а' <= (int)inputCh) && ((int)inputCh <= (int)'я'))
-		inputCh -= 32;
-	return inputCh;
+	return tmp;
 }
 
 void writeOutputFile() {
 	std::ofstream out;
 	out.open(nameOutputListFile);
 	bool coincidence = false;
-	bool isBASOF = false;
-	if (groupList[0] == "Аветисян Армен Левонович")
-		isBASOF = true;
 	for (size_t i = 0; i < groupList.size(); i++) {
 		for (size_t l = 0; l < outputList.size(); l++) {
 			if (groupList[i] == outputList[l]) {
@@ -344,9 +398,14 @@ void writeOutputFile() {
 				break;
 			}
 		}
-		if ((i == 2) || (i==4) || (i==11) || (i==22))
-			coincidence = true;
-		out << i<<" : "<<groupList[i] << " - ";
+		if (!coincidence)
+			for (size_t l = 0; l < addList.size(); l++)
+				if (groupList[i] == addList[l]) {
+					coincidence = true;
+					break;
+				}
+
+		out << i << " : " << groupList[i] << " - ";
 		if (coincidence) {
 			coincidence = false;
 			out << "true";

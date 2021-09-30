@@ -21,10 +21,33 @@
     <ClCompile Include="VariabilityName.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="TranslitAlfavitTwo.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="ToUpper.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VariabilityName.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="TranslitAlfavitTwo.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ToUpper.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="variabilityName.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="alfavitTranslit.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="toUpper.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>
