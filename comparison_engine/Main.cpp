@@ -228,10 +228,6 @@ bool comparisonTwo(string general_name, VariabilityName varName) {
 	general_name = toUpper(general_name);
 
 VARIATY_NAME:
-	ofstream out;
-	out.open("TEST.txt");
-	out << general_name <<  endl<<varName.GetIF()<<endl<<varName.GetIF()<<endl<<varName.GetFI_t()<<endl<<varName.GetIF_t()<<endl;
-	out.close();
 	if (general_name == varName.GetFI())
 		return true;
 	else if (general_name == varName.GetIF())
