@@ -159,6 +159,9 @@ void readConfigFile(int argc, char* argv[]) {
 			nameOutputListFile = nameFile[2];
 		readFiles(nameFile[0], nameFile[1], nameFile[3]);
 	}
+	if (!nameFile[2].empty())
+		nameOutputListFile = nameFile[2];
+	readFiles(nameFile[0], nameFile[1], nameFile[3]);
 }
 
 void readFiles(string nameGroupListFile, string nameGeneralListFile, string nameAddListFile) {
@@ -405,7 +408,7 @@ void writeOutputFile() {
 					break;
 				}
 
-		out << i << " : " << groupList[i] << " - ";
+		//out << i << " : " << groupList[i] << " - ";
 		if (coincidence) {
 			coincidence = false;
 			out << "true";
