@@ -126,6 +126,7 @@ void readConfigFile(int argc, char* argv[]) {
 		if (!nameFile[3].empty())
 			nameOutputListFile = nameFile[3];
 		readFiles(nameFile[1], nameFile[2], nameFile[4]);
+		return;
 	}
 	else if (in.is_open())
 	{
@@ -158,6 +159,7 @@ void readConfigFile(int argc, char* argv[]) {
 		if (!nameFile[2].empty())
 			nameOutputListFile = nameFile[2];
 		readFiles(nameFile[0], nameFile[1], nameFile[3]);
+		return;
 	}
 	if (!nameFile[2].empty())
 		nameOutputListFile = nameFile[2];
