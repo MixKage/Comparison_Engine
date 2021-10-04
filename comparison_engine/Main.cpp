@@ -413,7 +413,7 @@ void writeOutputFile() {
 					break;
 				}
 
-		out << i << " : " << groupList[i] << " - ";
+		/*out << i << " : " << groupList[i] << " - ";*/
 		if (coincidence) {
 			coincidence = false;
 			out << "true";
