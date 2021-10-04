@@ -348,6 +348,13 @@ string toUpper(string input) {
 	/*string output;*/
 	size_t index = 0;
 	string tmp;
+	if ((((int)input[0] >= 65) && ((int)input[0] <= 90)) || ((int)input[0] >= 97) && ((int)input[0] <= 122)) {
+		for (char ch : input) {
+			tmp += toupper(ch);
+		}
+		return tmp;
+	}
+
 	int isFirstChar = 0;
 	bool isSpace = false;
 	for (char a : input) {
@@ -406,7 +413,7 @@ void writeOutputFile() {
 					break;
 				}
 
-		//out << i << " : " << groupList[i] << " - ";
+		out << i << " : " << groupList[i] << " - ";
 		if (coincidence) {
 			coincidence = false;
 			out << "true";

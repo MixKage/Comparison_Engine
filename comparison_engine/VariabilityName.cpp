@@ -48,29 +48,11 @@ void VariabilityName::VariabilityNameEng(std::string input) {
 	int isFirstChar = 0;
 	bool isSpace = false;
 	for (char a : input) {
-		if (index == 0) {
-			isFirstChar = 2;
-			tmp += a;
-			index++;
-			continue;
-		}
-		else if (a == ' ') {
+		if (a == ' ') {
 			fnl[indexFnl++] = tmp;
 			isFirstChar = 1;
 			tmp.clear();
 			isSpace = !isSpace;
-			index++;
-			continue;
-		}
-		else if (isFirstChar == 1) {
-			tmp += a;
-			isFirstChar = 2;
-			index++;
-			continue;
-		}
-		else if (isFirstChar == 2) {
-			tmp += a;
-			isFirstChar = 0;
 			index++;
 			continue;
 		}
